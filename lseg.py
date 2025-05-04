@@ -1,9 +1,13 @@
 import csv
+import filecmp
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-logFile = "logs.log"
-output_path = "output.log"
+# logFile = "logs.log"
+logFile = "testLogs.log"
+# output_path = "output.log"
+output_path = "testOutput.log"
+expectedLogs = "expected.log"
 warningLevel = timedelta(minutes=5)
 errorLevel = timedelta(minutes=10)
 
@@ -29,6 +33,7 @@ def analyze_jobs(jobs, outfile):
 
         if not start or not end:
             print(f"[MISSING] Job {pid} ({desc}) is missing {'start' if not start else 'end'} time.")
+            outfile.write(f"[MISSING] Job {pid} ({desc}) is missing {'start' if not start else 'end'} time.\n")
             continue
 
         duration = end - start
@@ -46,3 +51,7 @@ def analyze_jobs(jobs, outfile):
 jobs = parse_log(logFile)
 with open(output_path, "w") as outfile:
     analyze_jobs(jobs, outfile)
+
+if not filecmp.cmp(expectedLogs, output_path):
+    print("files are different") 
+
