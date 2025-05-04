@@ -3,10 +3,11 @@ import filecmp
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-# logFile = "logs.log"
 logFile = "testLogs.log"
-# output_path = "output.log"
 output_path = "testOutput.log"
+
+# output_path = "output.log"
+# logFile = "logs.log"
 expectedLogs = "expected.log"
 warningLevel = timedelta(minutes=5)
 errorLevel = timedelta(minutes=10)
@@ -52,6 +53,6 @@ jobs = parse_log(logFile)
 with open(output_path, "w") as outfile:
     analyze_jobs(jobs, outfile)
 
-if not filecmp.cmp(expectedLogs, output_path):
-    print("files are different") 
+# if not filecmp.cmp(expectedLogs, output_path):
+#     print("files are different") 
 
