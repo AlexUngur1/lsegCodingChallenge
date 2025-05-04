@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 
 logFile = "logs.log"
+output_path = "output.log"
 warningLevel = timedelta(minutes=5)
 errorLevel = timedelta(minutes=10)
 
@@ -20,7 +21,7 @@ def parse_log(file_path):
                 jobs[pid]["end"] = timestamp
     return jobs
 
-def analyze_jobs(jobs):
+def analyze_jobs(jobs, outfile):
     for pid, data in jobs.items():
         start = data.get("start")
         end = data.get("end")
@@ -31,12 +32,17 @@ def analyze_jobs(jobs):
             continue
 
         duration = end - start
+        # with open(output_path, "w") as outfile:
         if duration > errorLevel:
             print(f"[ERROR] Job {pid} ({desc}) took {duration}.")
+            outfile.write(f"[ERROR] Job {pid} ({desc}) took {duration}.\n")
         elif duration > warningLevel:
             print(f"[WARNING] Job {pid} ({desc}) took {duration}.")
+            outfile.write(f"[WARNING] Job {pid} ({desc}) took {duration}.\n")
         else:
             print(f"[OK] Job {pid} ({desc}) took {duration}.")
+            outfile.write(f"[OK] Job {pid} ({desc}) took {duration}.\n")
 
 jobs = parse_log(logFile)
-analyze_jobs(jobs)
+with open(output_path, "w") as outfile:
+    analyze_jobs(jobs, outfile)
